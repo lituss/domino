@@ -61,8 +61,8 @@ static private final float precisio = 2.f;
 		
 	}
 	public void setPosition(float x, float y){
-		img.setPosition(x - img.getOriginX(), y - img.getOriginY());
-		//img.setCenter(x, y);
+		//img.setPosition(x - img.getOriginX(), y - img.getOriginY());
+		img.setCenter(x, y);
 	}
 	
 	public void draw(SpriteBatch batch){
@@ -93,8 +93,8 @@ static private final float precisio = 2.f;
 		pixmap.fillCircle(posx, posy, (int)radius);
 	}
 	
-	public void novaPosicio(float delta){
-		float x = img.getX(),y=img.getY();
+	public boolean novaPosicio(float delta){
+		float x = getX(),y=getY();
 		if (dinamica){
 			if ((Math.abs(x - xf) < precisio) && (Math.abs(y - yf) < precisio)){
 				dinamica = false;
@@ -107,12 +107,14 @@ static private final float precisio = 2.f;
 				img.rotate(w*delta);
 				setPosition(x, y);
 			}
+			//info();
+			return true;
 		}
-			
+		return false;	
 	}
 	public void marcaNovaPosicio(float x, float y , Orientacio orientacio, float temps){
 		float angle = img.getRotation();
-		//temps*=1000;
+		//temps*=1000000;
 		xf = x;
 		yf = y;
 		vx = (xf - getX())/temps;
@@ -125,6 +127,7 @@ static private final float precisio = 2.f;
 		w = (anglef - angle)/temps;
 		
 		dinamica = true;
+		Gdx.app.log("litus", "x,y,xf,yf,vx,vy : "+getX()+","+getY()+","+xf+","+yf+","+vx+","+vy);
 	}
 	public int getId() {
 		return id;
@@ -133,10 +136,10 @@ static private final float precisio = 2.f;
 		this.id = id;
 	}
 	public float getX(){
-		return img.getX();
+		return img.getX()+img.getOriginX();
 	}
 	public float getY(){
-		return img.getY();
+		return img.getY() + img.getOriginY();
 	}
 	public float getXf(){
 		return xf;
@@ -152,6 +155,6 @@ static private final float precisio = 2.f;
 		else img.setTexture(texture);
 	}
 	public void info(){
-		Gdx.app.log("litus","costat -> origen i centre : "+lonCostat+" --> "+img.getOriginX()+" , "+img.getOriginY()+" :: "+img.getX() + " , "+img.getY());
+		Gdx.app.log("litus","x,y : xf,yf --> "+getX() + " , "+getY()+" : "+xf+" , "+yf);
 	}
 }

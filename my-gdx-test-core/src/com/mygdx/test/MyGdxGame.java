@@ -28,7 +28,7 @@ public class MyGdxGame extends Game {
 		batch = new SpriteBatch();
 		//img = new Texture("badlogic.jpg");
 		//fitxes = new Fitxes(6);
-		joc = new Joc(2, 2, 6, this); // numero jugadors // numero fitxes per jugador // valor mes alt de la fitxa
+		joc = new Joc(4, 7, 6, this); // numero jugadors // numero fitxes per jugador // valor mes alt de la fitxa
 		setScreen(joc);
 	}
 

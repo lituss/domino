@@ -65,8 +65,10 @@ public class Fitxes {
 	public void draw( SpriteBatch batch){
 		for ( Fitxa  aux : fitxa) aux.draw(batch);
 	}
-	public void dinamica(float delta){
-		for ( Fitxa  aux : fitxa) aux.novaPosicio(delta);
+	public boolean dinamica(float delta){
+		boolean totesQuietes = true;
+		for ( Fitxa  aux : fitxa) if(aux.novaPosicio(delta) && !totesQuietes)  totesQuietes = false ;
+		return totesQuietes;
 	}
 	public Fitxa getFitxa(int index){
 		return fitxa.get(index);

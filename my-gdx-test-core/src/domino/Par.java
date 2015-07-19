@@ -2,25 +2,25 @@ package domino;
 
 public class Par {
 
-private	int lValue,rValue;
+private	float lValue,rValue;
 
 public Par(int lValue, int rValue){
 	this.lValue = lValue;
 	this.rValue = rValue;
 }
-public int getlValue() {
+public float getlValue() {
 	return lValue;
 }
-public void setlValue(int lValue) {
+public void setlValue(float lValue) {
 	this.lValue = lValue;
 }
-public int getrValue() {
+public float getrValue() {
 	return rValue;
 }
-public void setrValue(int rValue) {
+public void setrValue(float rValue) {
 	this.rValue = rValue;
 }
-public void setValue(int lValue, int rValue){
+public void setValue(float lValue, float rValue){
 	this.lValue = lValue;
 	this.rValue = rValue;
 }

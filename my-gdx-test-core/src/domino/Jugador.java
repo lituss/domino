@@ -19,18 +19,26 @@ public Jugador (Joc joc,int nFitxesInicial,PosicioJugador posicio){
 	this.posicio = posicio;
 	int migX = Gdx.graphics.getWidth() / 2, migY = Gdx.graphics.getHeight();
 	int lonCostat = joc.getFitxes().pixelsCostat, marge = 0;
-	primera = new Par(0,0);
+	//primera = new Par(0,0);
 	switch(posicio){
 		case hBaix:
-			primera = new Par(	migX - lonCostat*nFitxesInicial, lonCostat + marge);
+			primera = new Par(	(Gdx.graphics.getWidth() - lonCostat*(nFitxesInicial-2))/2, lonCostat + marge);
 			orientacio = Orientacio.Vertical;
 			break;
 		case hAlt:
-			primera = new Par(	migX + lonCostat*nFitxesInicial, Gdx.graphics.getHeight() - lonCostat - marge);
+			primera = new Par(	(Gdx.graphics.getWidth() + lonCostat*(nFitxesInicial))/2, Gdx.graphics.getHeight() - lonCostat - marge);
 			orientacio = Orientacio.Vertical;
 			break;
+		case vDreta:
+			primera = new Par(Gdx.graphics.getWidth() - lonCostat - marge,  (Gdx.graphics.getHeight() - lonCostat*(nFitxesInicial))/2);
+			orientacio = Orientacio.Horitzontal;
+			break;
+		case vEsquerra:
+			primera = new Par( lonCostat + marge,  (Gdx.graphics.getHeight() + lonCostat*(nFitxesInicial - 2))/2);
+			orientacio = Orientacio.Horitzontal;
+			break;
 	}
-
+Gdx.app.log("litus", "primera : "+primera.getlValue()+" , "+primera.getrValue());
 }
 public void rebFitxa(Fitxa fitxa){
 	
@@ -50,12 +58,13 @@ public void rebFitxa(Fitxa fitxa , float temps){
 			fitxa.marcaNovaPosicio(ultimaFitxa.getXf() - fitxa.getLonCostat(), ultimaFitxa.getYf(), orientacio,temps);
 			break;
 		case vDreta:
-			fitxa.marcaNovaPosicio(ultimaFitxa.getXf(), ultimaFitxa.getYf() + fitxa.getLonCostat()/2, orientacio,temps);
+			fitxa.marcaNovaPosicio(ultimaFitxa.getXf(), ultimaFitxa.getYf() + fitxa.getLonCostat(), orientacio,temps);
 			break;
 		case vEsquerra:
-			fitxa.marcaNovaPosicio(ultimaFitxa.getXf(), ultimaFitxa.getYf() - fitxa.getLonCostat()/2, orientacio,temps);
+			fitxa.marcaNovaPosicio(ultimaFitxa.getXf(), ultimaFitxa.getYf() - fitxa.getLonCostat(), orientacio,temps);
 			break;
 		}
+	ultimaFitxa = fitxa;
 }
 public void posaFitxa (Fitxa fitxa,int valor){
 	

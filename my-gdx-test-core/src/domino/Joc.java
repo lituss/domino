@@ -18,6 +18,7 @@ public class Joc implements Screen{
 	private SpriteBatch batch;
 	private int maxValor;
 	private final int margin = 0;
+	private boolean totesQuietes = false;
 
 	public Joc(int nJugadors, int nFitxesInicial , int maxValor,MyGdxGame game){
 		this.nFitxesInicial = nFitxesInicial;
@@ -31,7 +32,7 @@ private void reparteix(Jugador tornJugador){
 	// posem totes les fitxes en un array i les anem repartint 
 	Array <Integer> auxFitxes;
 	Jugador torn;
-	float temps = 10.f; // temps que trigara la fitxa a arribar al lloc
+	float temps = 2.f; // temps que trigara la fitxa a arribar al lloc
 
 	
 	auxFitxes = new Array<Integer>(false,0);
@@ -47,7 +48,7 @@ private void reparteix(Jugador tornJugador){
 			auxFitxes.removeIndex(auxFitxes.indexOf(auxFitxa, true));
 			aux.rebFitxa(fitxes.fitxa.get(auxFitxa),temps);
 			aux = aux.getSeguentJugador();
-			temps+=0.1f;
+			temps+=1f;
 		} while (aux != tornJugador);
 	}
 	 
@@ -57,7 +58,7 @@ private void reparteix(Jugador tornJugador){
 	public void show() {
 		// TODO Auto-generated method stub
 		fitxes = new Fitxes(maxValor); // creem les fitxes
-		jugadors = new Array<Jugador>(nJugadors); //creem Array jugadors
+		jugadors = new Array<Jugador>(false,0); //creem Array jugadors
 		
 		// enllaçem jugadors
 		//int g = 1;
@@ -74,25 +75,24 @@ private void reparteix(Jugador tornJugador){
 			jugadors.get(0).setSeguentJugador(jugadors.get(1));
 			jugadors.get(1).setSeguentJugador(jugadors.get(0));
 			break;
-		/*case 3 :
-			jugadors.add( new Jugador(this,PosicioJugador.hBaix));
-			jugadors.add( new Jugador(this,PosicioJugador.vDreta));
-			jugadors.add( new Jugador(this,PosicioJugador.hAlt));
-
-			jugadors.get(0).setPrimera(Gdx.graphics.getHeight() - (int)(fitxes.pixelsCostat - margin ), (int)mitatY);
-			jugadors.get(1).setPrimera(Gdx.graphics.getWidth() - fitxes.pixelsCostat - margin,(int) mitatY);
-			jugadors.get(2).setPrimera((int)(fitxes.pixelsCostat  + margin ), (int)mitatY);
+		case 3 :
+			jugadors.add( new Jugador(this,nFitxesInicial,PosicioJugador.hBaix));
+			jugadors.add( new Jugador(this,nFitxesInicial,PosicioJugador.vDreta));
+			jugadors.add( new Jugador(this,nFitxesInicial,PosicioJugador.hAlt));
+			jugadors.get(0).setSeguentJugador(jugadors.get(1));
+			jugadors.get(1).setSeguentJugador(jugadors.get(2));
+			jugadors.get(2).setSeguentJugador(jugadors.get(0));
 			break;
 		case 4 : 
-			jugadors.add( new Jugador(this,PosicioJugador.hBaix));
-			jugadors.add( new Jugador(this,PosicioJugador.vDreta));
-			jugadors.add( new Jugador(this,PosicioJugador.hAlt));
-			jugadors.add( new Jugador(this,PosicioJugador.vEsquerra));
-			jugadors.get(0).setPrimera(Gdx.graphics.getHeight() - (int)(fitxes.pixelsCostat - margin ), (int)mitatY);
-			jugadors.get(1).setPrimera(Gdx.graphics.getWidth() - fitxes.pixelsCostat - margin,(int) mitatY);
-			jugadors.get(2).setPrimera((int)(fitxes.pixelsCostat  + margin ), (int)mitatY);
-			jugadors.get(3).setPrimera(fitxes.pixelsCostat + margin,(int) mitatY);
-			break;*/
+			jugadors.add( new Jugador(this,nFitxesInicial,PosicioJugador.hBaix));
+			jugadors.add( new Jugador(this,nFitxesInicial,PosicioJugador.vDreta));
+			jugadors.add( new Jugador(this,nFitxesInicial,PosicioJugador.hAlt));
+			jugadors.add( new Jugador(this,nFitxesInicial,PosicioJugador.vEsquerra));
+			jugadors.get(0).setSeguentJugador(jugadors.get(1));
+			jugadors.get(1).setSeguentJugador(jugadors.get(2));
+			jugadors.get(2).setSeguentJugador(jugadors.get(3));
+			jugadors.get(3).setSeguentJugador(jugadors.get(0));
+			break;
 	}
 		tornJugador = jugadors.get(0);
 		reparteix(tornJugador);
