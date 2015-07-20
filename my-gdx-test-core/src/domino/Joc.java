@@ -1,11 +1,13 @@
 package domino;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.Timer.Task;
+import com.badlogic.gdx.utils.async.ThreadUtils;
 import com.mygdx.test.MyGdxGame;
 
 public class Joc implements Screen{
@@ -19,6 +21,9 @@ public class Joc implements Screen{
 	private int maxValor;
 	private final int margin = 0;
 	private boolean totesQuietes = false;
+	private Fitxa primeraFitxa=null;
+	private Fitxa fitxaL,fitxaR;
+	private int lValue,rValue;
 
 	public Joc(int nJugadors, int nFitxesInicial , int maxValor,MyGdxGame game){
 		this.nFitxesInicial = nFitxesInicial;
@@ -48,10 +53,43 @@ private void reparteix(Jugador tornJugador){
 			auxFitxes.removeIndex(auxFitxes.indexOf(auxFitxa, true));
 			aux.rebFitxa(fitxes.fitxa.get(auxFitxa),temps);
 			aux = aux.getSeguentJugador();
-			temps+=1f;
+			temps+=0.05f;
 		} while (aux != tornJugador);
 	}
 	 
+}
+
+public void juga(){
+	Fitxa fitxa;
+	//while (!totesQuietes) ;//ThreadUtils.yield(); // esperem que estiguin les fitxes repartides
+	
+	// mirem qui te el doble mes alt , la primera tirada es especial
+	Timer.instance().clear();
+	Gdx.app.log("litus", "Ja estan repartides i situades");
+	//Gdx.app.exit();
+	boolean surt = false;
+	for (int dobles = maxValor ; dobles >= 0 && !surt ; dobles --){
+		int id = fitxes.indexFitxa.get(dobles).get(dobles);//new Par((float)dobles,(float)dobles));
+		for ( Jugador auxJugador :jugadors)
+			if ((fitxa = auxJugador.posaFitxa(id)) != null){
+				primeraFitxa = fitxa;
+				lValue = dobles;rValue = dobles;
+				fitxaR = fitxa;fitxaL = fitxa;
+				
+				tornJugador = auxJugador.getSeguentJugador();
+				//posaFitxa(fitxa);
+				surt = true;
+				break;
+			}
+	}
+	
+	// reste de tirades
+	
+	boolean win = false;
+	/*do {
+		
+	} while (!win);*/
+	
 }
 	
 	@Override
@@ -96,6 +134,16 @@ private void reparteix(Jugador tornJugador){
 	}
 		tornJugador = jugadors.get(0);
 		reparteix(tornJugador);
+		Timer.schedule(new Task() {
+			@Override
+			public void run(){
+				if (totesQuietes){
+				juga();
+				}
+			}
+		},1, 1);
+		
+		//if (totesQuietes) // comença el joc
 		
 	}
 	Fitxes getFitxes(){ return fitxes;}
@@ -103,7 +151,7 @@ private void reparteix(Jugador tornJugador){
 	@Override
 	public void render(float delta) {
 		// TODO Auto-generated method stub
-		fitxes.dinamica(delta);
+		totesQuietes = fitxes.dinamica(delta);
 		Gdx.gl.glClearColor(0, 0, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();

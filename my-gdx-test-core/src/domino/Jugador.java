@@ -13,6 +13,7 @@ private Fitxa primeraFitxa = null;
 private Fitxa ultimaFitxa = null;
 private Array <Fitxa> fitxes;
 private Joc joc;
+private Fitxa fitxaAnterior;
 
 public Jugador (Joc joc,int nFitxesInicial,PosicioJugador posicio){
 	this.joc = joc;
@@ -20,6 +21,7 @@ public Jugador (Joc joc,int nFitxesInicial,PosicioJugador posicio){
 	int migX = Gdx.graphics.getWidth() / 2, migY = Gdx.graphics.getHeight();
 	int lonCostat = joc.getFitxes().pixelsCostat, marge = 0;
 	//primera = new Par(0,0);
+	fitxes = new Array <Fitxa> (false,0);
 	switch(posicio){
 		case hBaix:
 			primera = new Par(	(Gdx.graphics.getWidth() - lonCostat*(nFitxesInicial-2))/2, lonCostat + marge);
@@ -48,6 +50,7 @@ public void rebFitxa(Fitxa fitxa , float temps){
 		primeraFitxa = fitxa;
 		ultimaFitxa = fitxa;
 		fitxa.marcaNovaPosicio(primera.getlValue(), primera.getrValue(), orientacio, temps);
+		fitxaAnterior = fitxa;
 	}
 	else
 		switch (posicio){
@@ -64,10 +67,57 @@ public void rebFitxa(Fitxa fitxa , float temps){
 			fitxa.marcaNovaPosicio(ultimaFitxa.getXf(), ultimaFitxa.getYf() - fitxa.getLonCostat(), orientacio,temps);
 			break;
 		}
+	fitxaAnterior.setFitxaEsquerra(fitxa);
+	fitxa.setFitxaDreta(fitxaAnterior);
 	ultimaFitxa = fitxa;
+	fitxes.add(fitxa);
 }
-public void posaFitxa (Fitxa fitxa,int valor){
-	
+public Fitxa posaFitxa (int id){
+	 
+	for (Fitxa aux : fitxes)
+		if (aux.getId() == id) {
+			Fitxa esquerra,dreta;
+			esquerra = aux.getFitxaEsquerra();
+			dreta = aux.getFitxaDreta();
+			if (esquerra != null) esquerra.getFitxaDreta().setFitxaDreta(dreta);
+			if (dreta != null) dreta.getFitxaEsquerra().setFitxaEsquerra(esquerra);
+			aux.marcaNovaPosicio(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2, Orientacio.Vertical, 2);
+			fitxes.removeValue(aux, true);
+			return aux;
+		}
+	return null;
+}
+public Fitxa posaFitxa(int lValue,int rValue, boolean left, boolean win){
+	for (Fitxa aux : fitxes)
+		if (aux.getlValue() == lValue){
+			left = true;
+			fitxes.removeValue(aux, true);
+			if (fitxes.size == 0) win = true;
+			return aux;
+		}
+			else
+				if (aux.getlValue() == rValue){
+					left = false;
+					fitxes.removeValue(aux, true);
+					if (fitxes.size == 0) win = true;
+					return aux;
+				}
+				else
+					if (aux.getrValue() == lValue){
+						left = true;
+						fitxes.removeValue(aux, true);
+						if (fitxes.size == 0) win = true;
+						return aux;
+					}
+					else
+						if (aux.getrValue() == rValue){
+							left = false;
+							fitxes.removeValue(aux, true);
+							if (fitxes.size == 0) win = true;
+							return aux;
+						}
+		
+	return null;
 }
 
 public Jugador getSeguentJugador() {

@@ -4,7 +4,7 @@ public class Par {
 
 private	float lValue,rValue;
 
-public Par(int lValue, int rValue){
+public Par(float lValue, float rValue){
 	this.lValue = lValue;
 	this.rValue = rValue;
 }

@@ -23,7 +23,7 @@ private Orientacio orientacio = null;
 private boolean tapada = false;
 private boolean dinamica = false;
 private float xf,yf,anglef,vx,vy,w,dt; // x final y final velocidad x velocidad y velocitat de rotacio i temps per arribar al desti dt
-static private final float precisio = 2.f;
+static private final float precisio = 4.f;
 
 	public Fitxa (int lonCostat){
 		// negre, fitca tapada
@@ -35,8 +35,8 @@ static private final float precisio = 2.f;
 	}
 	public Fitxa(int lValue, int rValue, int lonCostat,int id){
 		this.lonCostat = lonCostat;
-		this.lValue = lValue;
-		this.rValue = rValue;
+		this.setlValue(lValue);
+		this.setrValue(rValue);
 		this.setId(id);
 		radius = lonCostat / 10;
 		pixmap = new Pixmap(lonCostat,2*lonCostat,Format.RGBA8888);
@@ -156,5 +156,29 @@ static private final float precisio = 2.f;
 	}
 	public void info(){
 		Gdx.app.log("litus","x,y : xf,yf --> "+getX() + " , "+getY()+" : "+xf+" , "+yf);
+	}
+	public Fitxa getFitxaEsquerra() {
+		return fitxaEsquerra;
+	}
+	public void setFitxaEsquerra(Fitxa fitxaEsquerra) {
+		this.fitxaEsquerra = fitxaEsquerra;
+	}
+	public Fitxa getFitxaDreta() {
+		return fitxaDreta;
+	}
+	public void setFitxaDreta(Fitxa fitxaDreta) {
+		this.fitxaDreta = fitxaDreta;
+	}
+	public int getlValue() {
+		return lValue;
+	}
+	public void setlValue(int lValue) {
+		this.lValue = lValue;
+	}
+	public int getrValue() {
+		return rValue;
+	}
+	public void setrValue(int rValue) {
+		this.rValue = rValue;
 	}
 }

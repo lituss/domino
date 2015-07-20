@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.ArrayMap;
 public class Fitxes {
 
 	Array<Fitxa> fitxa;
-	ArrayMap < Par,Integer> indexFitxa; 
+	ArrayMap <Integer,ArrayMap <Integer,Integer> > indexFitxa; 
 	
 	//Fitxa fitxa[] = new Fitxa[29 ];
 	
@@ -21,13 +21,20 @@ public class Fitxes {
 		int conta = 0,marge = 0;
 		float posx = marge + pixelsCostat /2, posy = Gdx.graphics.getHeight()/2;
 		fitxa = new Array<Fitxa>(false,0);
-		indexFitxa = new ArrayMap< Par,Integer>(0);
-		for (int pos = 0 ; pos <= maxValor ; pos++)
+		//
+		ArrayMap <Integer,Integer> aaa;
+		aaa = new ArrayMap(0);
+		//
+		indexFitxa = new ArrayMap (false,0);
+		//indexFitxa = new ArrayMap< new ArrayMap <Integer,Integer>(false,0) , Integer>(false,0);
+		for (int pos = 0 ; pos <= maxValor ; pos++){
+			aaa = new ArrayMap <Integer,Integer> (false,0);
 			for (int pos2 = pos ; pos2 <= maxValor ; pos2++){
 				fitxa.add(new Fitxa(pos,pos2,pixelsCostat,conta));
 				fitxa.get(conta).setPosition(posx,posy);
-				indexFitxa.put(new Par(pos,pos2),conta);
-				indexFitxa.put(new Par(pos2,pos),conta);
+				aaa.put(pos2, conta);
+				indexFitxa.put(pos,aaa);//(float)pos2),conta);
+				//indexFitxa.put(new Par((float)pos2,(float)pos),conta);
 				conta++;
 				posx+=pixelsCostat*1.1;
 				
@@ -36,9 +43,8 @@ public class Fitxes {
 					posy+= 2.2*pixelsCostat;
 				}
 			}
+		}
 		new Fitxa (pixelsCostat); // creem textura negra per quan es mostri tapada
-		fitxa.get(9).setPosition(pixelsCostat/2, pixelsCostat);
-		fitxa.get(9).info();
 	}
 	public void calculaPixelsCostat(){
 		float Max = 2.f; //cms peu
@@ -67,7 +73,8 @@ public class Fitxes {
 	}
 	public boolean dinamica(float delta){
 		boolean totesQuietes = true;
-		for ( Fitxa  aux : fitxa) if(aux.novaPosicio(delta) && !totesQuietes)  totesQuietes = false ;
+		for ( Fitxa  aux : fitxa) if(aux.novaPosicio(delta) && totesQuietes)  totesQuietes = false ;
+		//Gdx.app.log("litus","Totes Quietes : "+(totesQuietes ? "true" : "false"));
 		return totesQuietes;
 	}
 	public Fitxa getFitxa(int index){
