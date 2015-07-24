@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import domino.Fitxes;
 import domino.Joc;
+import domino.test;
 
 public class MyGdxGame extends Game {
 	SpriteBatch batch;
@@ -28,6 +29,7 @@ public class MyGdxGame extends Game {
 		batch = new SpriteBatch();
 		//img = new Texture("badlogic.jpg");
 		//fitxes = new Fitxes(6);
+		test myTest = new test(6);
 		joc = new Joc(4, 7, 6, this); // numero jugadors // numero fitxes per jugador // valor mes alt de la fitxa
 		setScreen(joc);
 	}

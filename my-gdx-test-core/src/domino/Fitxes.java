@@ -11,8 +11,8 @@ import com.badlogic.gdx.utils.ArrayMap;
 public class Fitxes {
 
 	Array<Fitxa> fitxa;
-	ArrayMap <Integer,ArrayMap <Integer,Integer> > indexFitxa; 
-	
+	//ArrayMap <Integer,ArrayMap <Integer,Integer> > indexFitxa; 
+	Array < Array <Integer> > indexFitxa;
 	//Fitxa fitxa[] = new Fitxa[29 ];
 	
 	int pixelsCostat;
@@ -22,18 +22,26 @@ public class Fitxes {
 		float posx = marge + pixelsCostat /2, posy = Gdx.graphics.getHeight()/2;
 		fitxa = new Array<Fitxa>(false,0);
 		//
-		ArrayMap <Integer,Integer> aaa;
-		aaa = new ArrayMap(0);
+		
+		
 		//
-		indexFitxa = new ArrayMap (false,0);
-		//indexFitxa = new ArrayMap< new ArrayMap <Integer,Integer>(false,0) , Integer>(false,0);
+		indexFitxa = new Array <Array <Integer>>(false,maxValor + 1);
+		for (int pos1 = 0 ; pos1 < maxValor + 1 ; pos1++){
+			Array<Integer> auxArray = new Array<Integer>(false,maxValor + 1);
+			for (int pos2 = 0 ; pos2 < maxValor +1; pos2++)
+				auxArray.insert(pos2, 0);
+			indexFitxa.insert(pos1,auxArray);
+		}
+		
 		for (int pos = 0 ; pos <= maxValor ; pos++){
-			aaa = new ArrayMap <Integer,Integer> (false,0);
 			for (int pos2 = pos ; pos2 <= maxValor ; pos2++){
 				fitxa.add(new Fitxa(pos,pos2,pixelsCostat,conta));
 				fitxa.get(conta).setPosition(posx,posy);
-				aaa.put(pos2, conta);
-				indexFitxa.put(pos,aaa);//(float)pos2),conta);
+				//aaa.put(pos2, conta);
+				//(indexFitxa.items[pos]).items[pos2] = conta;
+				indexFitxa.get(pos).set(pos2, conta);
+				indexFitxa.get(pos2).set(pos, conta);
+				//indexFitxa.get(pos).set(pos2,conta); // ..,aaa);//(float)pos2),conta);
 				//indexFitxa.put(new Par((float)pos2,(float)pos),conta);
 				conta++;
 				posx+=pixelsCostat*1.1;

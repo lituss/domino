@@ -18,7 +18,7 @@ private int id;
 private Texture texture;
 static private Texture negra ;
 private Fitxa fitxaEsquerra = null,fitxaDreta=null;
-private PosicioFitxaVeina posFitxaEsquerra=null,posFitxaDreta=null;
+private PosicioFitxa posFitxaEsquerra=null,posFitxaDreta=null;
 private Orientacio orientacio = null;
 private boolean tapada = false;
 private boolean dinamica = false;

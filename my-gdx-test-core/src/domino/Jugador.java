@@ -87,7 +87,7 @@ public Fitxa posaFitxa (int id){
 		}
 	return null;
 }
-public Fitxa posaFitxa(int lValue,int rValue, boolean left, boolean win){
+/*public Fitxa posaFitxa(int lValue,int rValue, boolean left, boolean win){
 	for (Fitxa aux : fitxes)
 		if (aux.getlValue() == lValue){
 			left = true;
@@ -119,7 +119,45 @@ public Fitxa posaFitxa(int lValue,int rValue, boolean left, boolean win){
 		
 	return null;
 }
+*/
+public Fitxa posaFitxa(Fitxa lFitxa,Fitxa rFitxa){
+	int lValue = (lFitxa.getFitxaEsquerra() == null ? lFitxa.getlValue() : lFitxa.getrValue());
+	int rValue = (rFitxa.getFitxaEsquerra() == null ? rFitxa.getlValue() : rFitxa.getrValue());
+	Fitxa fitxaPerTirar = null;
+	
+	for (Fitxa aux : fitxes){
+		if (aux.getlValue() == lValue) {colocaFitxa(aux,lFitxa,lValue);return aux;}
+		else 
+			if (aux.getlValue() == rValue){ colocaFitxa(aux,rFitxa,rValue); return aux;}
+			else
+				if (aux.getrValue() == lValue){ colocaFitxa(aux,lFitxa,lValue);return aux;}
+				else
+					if (aux.getrValue() == rValue){ colocaFitxa(aux,rFitxa,rValue); return aux;}
+	}
+	return null;
+}
 
+public void colocaFitxa(Fitxa novaFitxa, Fitxa fitxa, int value){
+	// ja sabem la fitxa que tirem i contra quina
+	// aqui desconectem la fitxa de les del jugador i calcularem la posicio i orientacio de la fitxa que tirem
+	
+	Fitxa esquerra,dreta;
+	esquerra = novaFitxa.getFitxaEsquerra();
+	dreta = novaFitxa.getFitxaDreta();
+	if (esquerra != null) esquerra.getFitxaDreta().setFitxaDreta(dreta);
+	if (dreta != null) dreta.getFitxaEsquerra().setFitxaEsquerra(esquerra);
+	//aux.marcaNovaPosicio(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2, Orientacio.Vertical, 2);
+	fitxes.removeValue(novaFitxa, true);
+	
+	// posicionament
+	
+}
+
+boolean posiciona(Fitxa novaFitxa, Fitxa fitxa){
+	return true;
+}
+
+boolean posiciona(Fitxa novaFitxa, Fitxa fitxa, )
 public Jugador getSeguentJugador() {
 	return seguentJugador;
 }
@@ -129,4 +167,5 @@ public void setSeguentJugador(Jugador seguentJugador) {
 public void setPrimera(int x, int y){
 	primera.setValue(x, y);
 }
+public int contaFitxes(){ return fitxes.size;}
 }

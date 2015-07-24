@@ -75,7 +75,9 @@ public void juga(){
 				primeraFitxa = fitxa;
 				lValue = dobles;rValue = dobles;
 				fitxaR = fitxa;fitxaL = fitxa;
-				
+				// lliguem les fitxes del jugador treient la que tirem
+				//fitxa.getFitxaEsquerra().setFitxaEsquerra(null);
+				//fitxa.getFitxaDreta().setFitxaDreta(null);
 				tornJugador = auxJugador.getSeguentJugador();
 				//posaFitxa(fitxa);
 				surt = true;
