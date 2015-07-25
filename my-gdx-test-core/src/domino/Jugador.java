@@ -153,7 +153,8 @@ public void colocaFitxa(Fitxa novaFitxa, Fitxa fitxa, int value){
 	
 }
 
-boolean posiciona(Fitxa novaFitxa, Fitxa fitxa){
+boolean posiciona(Fitxa novaFitxa, Fitxa fitxa, int value){
+	switch (fitxa.)
 	return true;
 }
 
