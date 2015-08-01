@@ -25,6 +25,8 @@ public class Joc implements Screen{
 	private Fitxa fitxaL,fitxaR;
 	private int lValue,rValue;
 	private Posicionador posicionadorR,posicionadorL;
+	private boolean primeraTirada = true;
+	private int passa = 0;
 
 	public Joc(int nJugadors, int nFitxesInicial , int maxValor,MyGdxGame game){
 		this.nFitxesInicial = nFitxesInicial;
@@ -67,42 +69,49 @@ public void juga(){
 	//while (!totesQuietes) ;//ThreadUtils.yield(); // esperem que estiguin les fitxes repartides
 	
 	// mirem qui te el doble mes alt , la primera tirada es especial
-	Timer.instance().clear();
-	Gdx.app.log("litus", "Ja estan repartides i situades");
-	//Gdx.app.exit();
-	boolean surt = false;
-	for (int dobles = maxValor ; dobles >= 0 && !surt ; dobles --){
-		int id = fitxes.indexFitxa.get(dobles).get(dobles);//new Par((float)dobles,(float)dobles));
-		for ( Jugador auxJugador :jugadors)
-			if ((fitxa = auxJugador.posaFitxa(id)) != null){
-				setPrimeraFitxa(fitxa);
-				setlValue(dobles);setrValue(dobles);
-				setFitxaR(fitxa);setFitxaL(fitxa);
+	//Timer.instance().clear();
+	if (primeraTirada){
+		Gdx.app.log("litus", "Ja estan repartides i situades");
+		//Gdx.app.exit();
+		boolean surt = false;
+		for (int dobles = maxValor ; dobles >= 0 && !surt ; dobles --){
+			int id = fitxes.indexFitxa.get(dobles).get(dobles);//new Par((float)dobles,(float)dobles));
+			for ( Jugador auxJugador :jugadors)
+				if ((fitxa = auxJugador.posaFitxa(id)) != null){
+					setPrimeraFitxa(fitxa);
+					setlValue(dobles);setrValue(dobles);
+					setFitxaR(fitxa);setFitxaL(fitxa);
 				// lliguem les fitxes del jugador treient la que tirem
 				//fitxa.getFitxaEsquerra().setFitxaEsquerra(null);
 				//fitxa.getFitxaDreta().setFitxaDreta(null);
-				tornJugador = auxJugador;
+					tornJugador = auxJugador;
 				//posaFitxa(fitxa);
-				surt = true;
-				break;
-			}
+					surt = true;
+					break;
+				}
+		}
+		primeraTirada=false;
 	}
-	
+	else{
 	// reste de tirades
 	Jugador ultimQueHaTirat = tornJugador;
-	Fitxa ultimaFitxa = fitxa,fitxaAnterior = null;
-	int valor=0,passa = 0;
+	Fitxa fitxaAtirar = null,fitxaAnterior = fitxa;
+	int valor=0;
 	boolean win = false;
-	do {
+	
 		tornJugador = tornJugador.getSeguentJugador();
-		ultimaFitxa = tornJugador.posaFitxa(fitxaL, fitxaR, fitxaAnterior, valor);
-		if (ultimaFitxa == null ) passa++;
+		fitxaAtirar = tornJugador.posaFitxa(fitxaL, fitxaR, fitxaAnterior, valor);
+		if (fitxaAtirar == null ) passa++;
 		else {
-			posa (ultimaFitxa,fitxaAnterior,valor);
+			posa (fitxaAtirar,fitxaAnterior,valor);
 			passa = 0;
 		}
-	} while (tornJugador.contaFitxes() == 0 || passa == nJugadors );
-	
+	if  (tornJugador.contaFitxes() == 0 || passa == nJugadors ){
+	// acaba partida
+		Timer.instance().clear();
+		//finalPArtida
+		}
+	}
 	
 	}
 
