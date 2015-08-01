@@ -18,11 +18,12 @@ private int id;
 private Texture texture;
 static private Texture negra ;
 private Fitxa fitxaEsquerra = null,fitxaDreta=null;
-private PosicioFitxa posFitxaEsquerra=null,posFitxaDreta=null;
-private Orientacio orientacio = null;
+//private Orientacio posFitxaEsquerra=null,posFitxaDreta=null;
+private Orientacio orientacio;
 private boolean tapada = false;
 private boolean dinamica = false;
 private float xf,yf,anglef,vx,vy,w,dt; // x final y final velocidad x velocidad y velocitat de rotacio i temps per arribar al desti dt
+private int nivell; // 0 -> primera horitzontal 1-> pujant 2-> segona horitzontal (a sobre) ..-1 -> baixant -2 -> segona horitzontal per vaix
 static private final float precisio = 4.f;
 
 	public Fitxa (int lonCostat){
@@ -112,17 +113,15 @@ static private final float precisio = 4.f;
 		}
 		return false;	
 	}
-	public void marcaNovaPosicio(float x, float y , Orientacio orientacio, float temps){
+	public void marcaNovaPosicio(float x, float y , float anglef, Orientacio orientacio, float temps){
 		float angle = img.getRotation();
 		//temps*=1000000;
 		xf = x;
 		yf = y;
 		vx = (xf - getX())/temps;
 		vy = (yf - getY())/temps;
-		if (orientacio == Orientacio.Vertical)
-			anglef = 0;
-		else
-			anglef = 90;
+		this.anglef = anglef;
+		this.orientacio = orientacio;
 	
 		w = (anglef - angle)/temps;
 		
@@ -180,5 +179,29 @@ static private final float precisio = 4.f;
 	}
 	public void setrValue(int rValue) {
 		this.rValue = rValue;
+	}
+	public Orientacio getOrientacio() {
+		return orientacio;
+	}
+	public void setOrientacio(Orientacio orientacio) {
+		this.orientacio = orientacio;
+	}
+	public int getNivell() {
+		return nivell;
+	}
+	public void setNivell(int nivell) {
+		this.nivell = nivell;
+	}
+	public boolean esDoble(){
+		return (lValue == rValue ? true : false);
+	}
+	public float getAngle(){
+		return anglef;
+	}
+	public float getEscala() {
+		return img.getScaleX();
+	}
+	public void setEscala(float escala) {
+		img.setScale(escala);
 	}
 }

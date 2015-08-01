@@ -24,6 +24,7 @@ public class Joc implements Screen{
 	private Fitxa primeraFitxa=null;
 	private Fitxa fitxaL,fitxaR;
 	private int lValue,rValue;
+	private Posicionador posicionadorR,posicionadorL;
 
 	public Joc(int nJugadors, int nFitxesInicial , int maxValor,MyGdxGame game){
 		this.nFitxesInicial = nFitxesInicial;
@@ -31,6 +32,8 @@ public class Joc implements Screen{
 		batch = game.getBatch();
 		this.game = game;
 		this.maxValor = maxValor;
+		posicionadorR = new Posicionador(Posicionador.Tipus.esquerra,this);
+		posicionadorL = new Posicionador(Posicionador.Tipus.dreta,this);
 	}
 
 private void reparteix(Jugador tornJugador){
@@ -60,7 +63,7 @@ private void reparteix(Jugador tornJugador){
 }
 
 public void juga(){
-	Fitxa fitxa;
+	Fitxa fitxa=null;
 	//while (!totesQuietes) ;//ThreadUtils.yield(); // esperem que estiguin les fitxes repartides
 	
 	// mirem qui te el doble mes alt , la primera tirada es especial
@@ -72,13 +75,13 @@ public void juga(){
 		int id = fitxes.indexFitxa.get(dobles).get(dobles);//new Par((float)dobles,(float)dobles));
 		for ( Jugador auxJugador :jugadors)
 			if ((fitxa = auxJugador.posaFitxa(id)) != null){
-				primeraFitxa = fitxa;
-				lValue = dobles;rValue = dobles;
-				fitxaR = fitxa;fitxaL = fitxa;
+				setPrimeraFitxa(fitxa);
+				setlValue(dobles);setrValue(dobles);
+				setFitxaR(fitxa);setFitxaL(fitxa);
 				// lliguem les fitxes del jugador treient la que tirem
 				//fitxa.getFitxaEsquerra().setFitxaEsquerra(null);
 				//fitxa.getFitxaDreta().setFitxaDreta(null);
-				tornJugador = auxJugador.getSeguentJugador();
+				tornJugador = auxJugador;
 				//posaFitxa(fitxa);
 				surt = true;
 				break;
@@ -86,12 +89,34 @@ public void juga(){
 	}
 	
 	// reste de tirades
-	
+	Jugador ultimQueHaTirat = tornJugador;
+	Fitxa ultimaFitxa = fitxa,fitxaAnterior = null;
+	int valor=0,passa = 0;
 	boolean win = false;
-	/*do {
-		
-	} while (!win);*/
+	do {
+		tornJugador = tornJugador.getSeguentJugador();
+		ultimaFitxa = tornJugador.posaFitxa(fitxaL, fitxaR, fitxaAnterior, valor);
+		if (ultimaFitxa == null ) passa++;
+		else {
+			posa (ultimaFitxa,fitxaAnterior,valor);
+			passa = 0;
+		}
+	} while (tornJugador.contaFitxes() == 0 || passa == nJugadors );
 	
+	
+	}
+
+void posa(Fitxa fitxa, Fitxa fitxaAnterior, int valor){
+	if (fitxaL == fitxaAnterior){
+		posicionadorL.posiciona (fitxa,fitxaAnterior,valor);
+		setFitxaL(fitxa);
+		setlValue(valor);
+	}
+	else {
+		posicionadorR.posiciona(fitxa, fitxaAnterior, valor);
+		setFitxaR(fitxa);
+		setrValue(valor);
+	}
 }
 	
 	@Override
@@ -190,4 +215,44 @@ public void juga(){
 	public void dispose() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public Fitxa getFitxaL() {
+		return fitxaL;
+	}
+
+	public void setFitxaL(Fitxa fitxaL) {
+		this.fitxaL = fitxaL;
+	}
+
+	public int getrValue() {
+		return rValue;
+	}
+
+	public void setrValue(int rValue) {
+		this.rValue = rValue;
+	}
+
+	public Fitxa getFitxaR() {
+		return fitxaR;
+	}
+
+	public void setFitxaR(Fitxa fitxaR) {
+		this.fitxaR = fitxaR;
+	}
+
+	public int getlValue() {
+		return lValue;
+	}
+
+	public void setlValue(int lValue) {
+		this.lValue = lValue;
+	}
+
+	public Fitxa getPrimeraFitxa() {
+		return primeraFitxa;
+	}
+
+	public void setPrimeraFitxa(Fitxa primeraFitxa) {
+		this.primeraFitxa = primeraFitxa;
 	}}
