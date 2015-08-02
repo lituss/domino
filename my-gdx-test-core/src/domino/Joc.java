@@ -111,6 +111,7 @@ public void juga(){
 	if  (tornJugador.contaFitxes() == 0 || passa == nJugadors ){
 	// acaba partida
 		Timer.instance().clear();
+		Gdx.app.error("Litus", "Final partida :)");
 		//finalPArtida
 		}
 	}

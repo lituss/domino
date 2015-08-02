@@ -146,8 +146,8 @@ public void colocaFitxa(Fitxa novaFitxa){
 	Fitxa esquerra,dreta;
 	esquerra = novaFitxa.getFitxaEsquerra();
 	dreta = novaFitxa.getFitxaDreta();
-	if (esquerra != null) esquerra.getFitxaDreta().setFitxaDreta(dreta);
-	if (dreta != null) dreta.getFitxaEsquerra().setFitxaEsquerra(esquerra);
+	if (esquerra != null) esquerra.setFitxaDreta(dreta);
+	if (dreta != null) dreta.setFitxaEsquerra(esquerra);
 	//aux.marcaNovaPosicio(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2, Orientacio.Vertical, 2);
 	fitxes.removeValue(novaFitxa, true);
 	

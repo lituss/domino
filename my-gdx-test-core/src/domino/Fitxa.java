@@ -204,4 +204,8 @@ static private final float precisio = 4.f;
 	public void setEscala(float escala) {
 		img.setScale(escala);
 	}
+	public String info2(){
+		String retorn = " "+lValue+":"+rValue+" ";
+		return retorn;
+	}
 }
