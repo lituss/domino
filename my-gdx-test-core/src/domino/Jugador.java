@@ -121,19 +121,20 @@ public Fitxa posaFitxa (int id){
 	return null;
 }
 */
-public Fitxa posaFitxa(Fitxa lFitxa,Fitxa rFitxa, /* parametres de tornada */ Fitxa fitxaAnterior, int valor){
-	int lValue = (lFitxa.getFitxaEsquerra() == null ? lFitxa.getlValue() : lFitxa.getrValue());
-	int rValue = (rFitxa.getFitxaEsquerra() == null ? rFitxa.getlValue() : rFitxa.getrValue());
-	Fitxa fitxaPerTirar = null;
-	
+public Fitxa posaFitxa(Fitxa lFitxa,Fitxa rFitxa){
+	fitxaAnterior = null;
+	int  valor = -1;
+	int lValue = joc.getlValue();
+	int rValue = joc.getrValue();
+	Gdx.app.debug("litus"," valor E : valor D -> "+lValue+" : "+rValue);
 	for (Fitxa aux : fitxes){
-		if (aux.getlValue() == lValue) {colocaFitxa(aux);fitxaAnterior = lFitxa; valor = lValue;return aux;}
+		if (aux.getlValue() == lValue) {colocaFitxa(aux);joc.posa(aux,lFitxa,lValue);return aux;}
 		else 
-			if (aux.getlValue() == rValue){ colocaFitxa(aux); fitxaAnterior = rFitxa; valor = rValue; return aux;}
+			if (aux.getlValue() == rValue){ colocaFitxa(aux); joc.posa(aux, rFitxa,rValue); return aux;}
 			else
-				if (aux.getrValue() == lValue){ colocaFitxa(aux); fitxaAnterior = lFitxa; valor = lValue;return aux;}
+				if (aux.getrValue() == lValue){ colocaFitxa(aux); joc.posa(aux, lFitxa, lValue);return aux;}
 				else
-					if (aux.getrValue() == rValue){ colocaFitxa(aux);fitxaAnterior = rFitxa; valor = rValue; return aux;}
+					if (aux.getrValue() == rValue){ colocaFitxa(aux);joc.posa(aux, rFitxa, rValue); return aux;}
 	}
 	return null;
 }

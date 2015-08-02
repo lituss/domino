@@ -1,5 +1,7 @@
 package domino;
 
+import java.util.concurrent.locks.Lock;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -21,12 +23,13 @@ public class Joc implements Screen{
 	private int maxValor;
 	private final int margin = 0;
 	private boolean totesQuietes = false;
-	private Fitxa primeraFitxa=null;
+	private Fitxa primeraFitxa=null,fitxaAnterior=null;
 	private Fitxa fitxaL,fitxaR;
-	private int lValue,rValue;
+	private int lValue,rValue,nouValue;
 	private Posicionador posicionadorR,posicionadorL;
 	private boolean primeraTirada = true;
 	private int passa = 0;
+	private boolean jugant = false;
 
 	public Joc(int nJugadors, int nFitxesInicial , int maxValor,MyGdxGame game){
 		this.nFitxesInicial = nFitxesInicial;
@@ -65,6 +68,8 @@ private void reparteix(Jugador tornJugador){
 }
 
 public void juga(){
+	if (jugant) return;
+	jugant = true;
 	Fitxa fitxa=null;
 	//while (!totesQuietes) ;//ThreadUtils.yield(); // esperem que estiguin les fitxes repartides
 	
@@ -94,16 +99,13 @@ public void juga(){
 	}
 	else{
 	// reste de tirades
-	Jugador ultimQueHaTirat = tornJugador;
-	Fitxa fitxaAtirar = null,fitxaAnterior = fitxa;
-	int valor=0;
-	boolean win = false;
+	
 	
 		tornJugador = tornJugador.getSeguentJugador();
-		fitxaAtirar = tornJugador.posaFitxa(fitxaL, fitxaR, fitxaAnterior, valor);
+		Fitxa fitxaAtirar = tornJugador.posaFitxa(fitxaL, fitxaR);
 		if (fitxaAtirar == null ) passa++;
 		else {
-			posa (fitxaAtirar,fitxaAnterior,valor);
+		//	posa (fitxaAtirar,fitxaAnterior,valor);
 			passa = 0;
 		}
 	if  (tornJugador.contaFitxes() == 0 || passa == nJugadors ){
@@ -112,19 +114,22 @@ public void juga(){
 		//finalPArtida
 		}
 	}
-	
+	jugant = false;
 	}
 
 void posa(Fitxa fitxa, Fitxa fitxaAnterior, int valor){
+	int nouValor;
+	
+	if (fitxa.getlValue()==valor) nouValor = fitxa.getrValue();else nouValor = fitxa.getlValue();
 	if (fitxaL == fitxaAnterior){
 		posicionadorL.posiciona (fitxa,fitxaAnterior,valor);
 		setFitxaL(fitxa);
-		setlValue(valor);
+		setlValue(nouValor);
 	}
 	else {
 		posicionadorR.posiciona(fitxa, fitxaAnterior, valor);
 		setFitxaR(fitxa);
-		setrValue(valor);
+		setrValue(nouValor);
 	}
 }
 	
@@ -132,6 +137,7 @@ void posa(Fitxa fitxa, Fitxa fitxaAnterior, int valor){
 	public void show() {
 		// TODO Auto-generated method stub
 		fitxes = new Fitxes(maxValor); // creem les fitxes
+		posicionadorL.calculaLimits();
 		jugadors = new Array<Jugador>(false,0); //creem Array jugadors
 		
 		// enllaçem jugadors
@@ -264,4 +270,20 @@ void posa(Fitxa fitxa, Fitxa fitxaAnterior, int valor){
 
 	public void setPrimeraFitxa(Fitxa primeraFitxa) {
 		this.primeraFitxa = primeraFitxa;
+	}
+
+	public int getNouValue() {
+		return nouValue;
+	}
+
+	public void setNouValue(int nouValue) {
+		this.nouValue = nouValue;
+	}
+
+	public Fitxa getFitxaAnterior() {
+		return fitxaAnterior;
+	}
+
+	public void setFitxaAnterior(Fitxa fitxaAnterior) {
+		this.fitxaAnterior = fitxaAnterior;
 	}}

@@ -9,27 +9,35 @@ private int valor;
 private int distanciaNivell = 0;
 private int nouNivell;
 private Joc joc;
+float posX = 0,posY = 0;
+float hiCapX = 0,hiCapY = 0;
+float angle;
+boolean esquerra = false,amunt=false;
+static float limitXE ,limitXD, limitYD, limitYU;
 
 	public Posicionador(Tipus tipus,Joc joc){
 		tipusPosicionador = tipus;
 		this.joc = joc;
 	}
+	void calculaLimits(){ // necessitem les mides de les fitxes, ho hem de cridar despres de crearles
+		limitXE = 2*joc.getFitxes().getFitxa(0).getLonCostat() + Constants.MargeJugadorsJoc;
+		limitXD = Gdx.graphics.getWidth() - limitXE;
+		limitYD = limitXE;
+		limitYU = Gdx.graphics.getHeight() - limitYD;
+	}
 	public boolean posiciona (Fitxa novaFitxa,Fitxa fitxa,int valor){
 		
 		lliga(novaFitxa,fitxa);
-		Orientacio orientacio = novaOrientacio(getOrientacio(fitxa),fitxa,nouNivell);
+		Orientacio orientacio = novaOrientacio(getOrientacio(fitxa),fitxa,novaFitxa,nouNivell);
 		if (posiciona(novaFitxa,orientacio,fitxa,nouNivell,valor)) return true;
 		else
 			Gdx.app.log("litus", "Error intern, no sap on posar la fitxa");
 		return false;
 	}
 	public boolean posiciona (Fitxa novaFitxa,Orientacio orientacio,Fitxa fitxa, int nivell, int valor){
-		float posX = 0,posY = 0;
-		float hiCapX = 0,hiCapY = 0;
-		float angle;
-		boolean esquerra = false,amunt=false;
 		
-		calculaPos(fitxa,orientacio,posX,posY,hiCapX,hiCapY,esquerra,amunt);
+		
+		calculaPos(fitxa,orientacio); //,posX,posY,hiCapX,hiCapY,esquerra,amunt);
 		
 		if (hiCapX>=0 && hiCapY>=0){
 			// posicio final
@@ -115,13 +123,15 @@ private Joc joc;
 		}
 	}
 	Orientacio getOrientacio(Fitxa fitxa){
-		if (fitxa.getOrientacio() == Orientacio.V || fitxa.getOrientacio() == Orientacio.H) return getOrientacio(anteriorFitxa(fitxa));
+		if (fitxa.getOrientacio() == Orientacio.V || fitxa.getOrientacio() == Orientacio.H) 
+			if (anteriorFitxa(fitxa) != null) return getOrientacio(anteriorFitxa(fitxa));
+			else return (Orientacio.HL); // es la primera fitxa i es un doble
 		else return fitxa.getOrientacio();
 	}
-	Orientacio novaOrientacio(Orientacio orientacio,Fitxa fitxa, int nouNivell){// orientacio basada en la de la fitxa anterior
+	Orientacio novaOrientacio(Orientacio orientacio,Fitxa fitxa,Fitxa novaFitxa, int nouNivell){// orientacio basada en la de la fitxa anterior
 		nouNivell = fitxa.getNivell();
 		
-		if (fitxa.esDoble())
+		if (novaFitxa.esDoble())
 			switch (orientacio) {
 			case HL :
 			case HR :
@@ -156,12 +166,17 @@ private Joc joc;
 		return null;
 	}
 	Fitxa anteriorFitxa(Fitxa fitxa){
-		if (tipusPosicionador == Tipus.esquerra) return fitxa.getFitxaDreta();
-		else return fitxa.getFitxaEsquerra();
+		Fitxa retorn=null;
+		if (tipusPosicionador == Tipus.esquerra) 
+			if (fitxa == fitxa.getFitxaDreta()) retorn = fitxa.getFitxaDreta();
+		else retorn = fitxa.getFitxaEsquerra();
+		if (fitxa== retorn) return null; else return retorn;
 	}
 	Fitxa seguentFitxa (Fitxa fitxa){
-		if (tipusPosicionador == Tipus.esquerra) return fitxa.getFitxaEsquerra();
-		else return fitxa.getFitxaDreta();
+		Fitxa retorn;
+		if (tipusPosicionador == Tipus.esquerra) retorn = fitxa.getFitxaEsquerra();
+		else retorn = fitxa.getFitxaDreta();
+		if (fitxa== retorn) return null; else return retorn;
 	}
 	
 	boolean mouTotesX(float deltaX, boolean esquerra){ 
@@ -261,11 +276,8 @@ private Joc joc;
 		}
 		return true;
 	}
-	boolean calculaPos (Fitxa fitxaAnterior,Orientacio orientacioActual,float posX, float posY, float noHiCapX, float noHiCapY, boolean esquerra, boolean amunt){
-		float limitXE = 2*fitxaAnterior.getLonCostat() + Constants.MargeJugadorsJoc,
-		limitXD = Gdx.graphics.getWidth() - limitXE,
-		limitYD = limitXE,
-		limitYU = Gdx.graphics.getHeight() - limitYD;
+	boolean calculaPos (Fitxa fitxaAnterior,Orientacio orientacioActual){//,float posX, float posY, float noHiCapX, float noHiCapY, boolean esquerra, boolean amunt){
+		
 		float deltaX,deltaY;
 		switch (orientacioActual) {
 			case V: // nomes pot anar a la esquerra o a la dreta , perque es doble i esta en vertical
@@ -273,95 +285,99 @@ private Joc joc;
 				deltaX = fitxaAnterior.getLonCostat()*3/2 - Constants.MargeFitxesTirades;
 				if (fitxaAnterior.getOrientacio() == Orientacio.HL){ // va a la esquerra 
 					posX = fitxaAnterior.getXf() - deltaX;
-					noHiCapX = posX - limitXE;
-					if (noHiCapX < 0) esquerra = true;
+					hiCapX = posX - limitXE;
+					if (hiCapX < 0) esquerra = true;
 				}
 				else {
 					posX = fitxaAnterior.getXf() + deltaX;
-					noHiCapX =  limitXD - posX;
-					if (noHiCapX < 0) esquerra = false;
+					hiCapX =  limitXD - posX;
+					if (hiCapX < 0) esquerra = false;
 				}
 				// Y	
 		
 				posY = fitxaAnterior.getYf();
-				noHiCapY = limitYU - posY; 
+				hiCapY = limitYU - posY; 
 					
 				break;
 				
 			case H: // va amunt o avall
 				deltaY = fitxaAnterior.getLonCostat()*3/2 + Constants.MargeFitxesTirades;
 				posX = fitxaAnterior.getXf();
-				noHiCapX = posX - limitXE;
+				hiCapX = posX - limitXE;
 				if (fitxaAnterior.getOrientacio() == Orientacio.VUL || fitxaAnterior.getOrientacio() == Orientacio.VUR){ // va amunt
 					posY = fitxaAnterior.getYf()+deltaY;
-					noHiCapY = limitYU - posY;
+					hiCapY = limitYU - posY;
 				}
 				else {// va avall --> VD
 					posY = fitxaAnterior.getYf() - deltaY;
-					noHiCapY = limitYD - posY;
+					hiCapY = limitYD - posY;
 				}
 				break;
 				
 			case HL: // H en sentit esquerra
-				deltaX = fitxaAnterior.getLonCostat()*2 + Constants.MargeFitxesTirades;
+				if (fitxaAnterior.esDoble())
+					deltaX = fitxaAnterior.getLonCostat()*3/2 + Constants.MargeFitxesTirades;
+				else
+					deltaX = fitxaAnterior.getLonCostat()*2 + Constants.MargeFitxesTirades;
+				
 				posX = fitxaAnterior.getXf() - deltaX;
-				noHiCapX = posX - limitXE;
+				hiCapX = posX - limitXE;
 				posY = fitxaAnterior.getYf();
 				break;
 			case HR: //H en sentit dreta
-				deltaX = fitxaAnterior.getLonCostat()*2 + Constants.MargeFitxesTirades;
+				deltaX = fitxaAnterior.getLonCostat()*3/2 + Constants.MargeFitxesTirades;
 				posX = fitxaAnterior.getXf() + deltaX;
-				noHiCapX = limitXE - posX;
+				hiCapX = limitXE - posX;
 				posY = fitxaAnterior.getYf();
 				break;
 			case VUL: // vertical pujant
 				deltaY = fitxaAnterior.getYf()*3/2;
 				posY = fitxaAnterior.getYf() + deltaY;
-				noHiCapY = limitYU - posY;
+				hiCapY = limitYU - posY;
 				switch (fitxaAnterior.getOrientacio()){
 				case VUL :
 					posX = fitxaAnterior.getXf();
-					noHiCapX = posX - limitXE;
+					hiCapX = posX - limitXE;
 					break;
 				case HL :
 					deltaX = fitxaAnterior.getLonCostat()/2;
 					posX = fitxaAnterior.getXf() - deltaX;
-					noHiCapX = posX - limitXE;
+					hiCapX = posX - limitXE;
 				}
 				break;
 			case VUR :
 				deltaY = fitxaAnterior.getYf()*3/2;
 				posY = fitxaAnterior.getYf() + deltaY;
-				noHiCapY = limitYU - posY;
+				hiCapY = limitYU - posY;
 				switch (fitxaAnterior.getOrientacio()){
 				case VUR :
 					posX = fitxaAnterior.getXf();
-					noHiCapX = limitXD - posX;
+					hiCapX = limitXD - posX;
 					break;
 				case HR :
 					deltaX = fitxaAnterior.getLonCostat()/2;
 					posX = fitxaAnterior.getXf() + deltaX;
-					noHiCapX = limitXD - posX;
+					hiCapX = limitXD - posX;
 				}
 				break;
 			case VDL: // vertical baixant esquerra
 				deltaY = fitxaAnterior.getYf()*3/2;
 				posY = fitxaAnterior.getYf() - deltaY;
-				noHiCapY = limitYU - posY;
+				hiCapY = limitYU - posY;
 				switch (fitxaAnterior.getOrientacio()){
 				case VDL :
 					posX = fitxaAnterior.getXf();
-					noHiCapX = limitXD - posX;
+					hiCapX = limitXD - posX;
 					break;
 				case HL :
 					deltaX = fitxaAnterior.getLonCostat()/2;
 					posX = fitxaAnterior.getXf() - deltaX;
-					noHiCapX = limitXD - posX;
+					hiCapX = limitXD - posX;
 					break;
 				}
 			break;
 			}
-		return ( noHiCapX > 0 &&  noHiCapY > 0);
+		return ( hiCapX >= 0 &&  hiCapY >= 0);
 	}
 }
 
