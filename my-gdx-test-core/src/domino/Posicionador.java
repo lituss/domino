@@ -31,6 +31,7 @@ float lonCostat;
 		
 		lliga(novaFitxa,fitxa);
 		Orientacio orientacio = novaOrientacio(getOrientacio(fitxa),fitxa,novaFitxa,nouNivell);
+		Gdx.app.error("litus", "Fitxa -> orientacio : "+novaFitxa.getlValue()+" : "+novaFitxa.getrValue()+" --> "+orientacio);
 		if (posiciona(novaFitxa,orientacio,fitxa,nouNivell,valor)) return true;
 		else
 			Gdx.app.log("litus", "Error intern, no sap on posar la fitxa");
