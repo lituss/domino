@@ -3,6 +3,7 @@ package domino;
 import java.util.concurrent.locks.Lock;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -37,8 +38,20 @@ public class Joc implements Screen{
 		batch = game.getBatch();
 		this.game = game;
 		this.maxValor = maxValor;
-		posicionadorR = new Posicionador(Posicionador.Tipus.esquerra,this);
-		posicionadorL = new Posicionador(Posicionador.Tipus.dreta,this);
+		posicionadorL = new Posicionador(Posicionador.Tipus.esquerra,this);
+		posicionadorR = new Posicionador(Posicionador.Tipus.dreta,this);
+		Gdx.input.setInputProcessor(new InputAdapter(){
+			public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		        //if (button == Buttons.LEFT) {
+		            // do something
+		        //}
+				if (totesQuietes){
+					juga();
+					}
+				return true;
+			}
+		});
+
 	}
 
 private void reparteix(Jugador tornJugador){
@@ -122,12 +135,17 @@ void posa(Fitxa fitxa, Fitxa fitxaAnterior, int valor){
 	int nouValor;
 	
 	if (fitxa.getlValue()==valor) nouValor = fitxa.getrValue();else nouValor = fitxa.getlValue();
+	Gdx.app.error("litus","Anem a posar : "+fitxa.info2());
 	if (fitxaL == fitxaAnterior){
+		Gdx.app.error("litus", "Posicionador esquerra");
+		posicionadorL.lliga(fitxa, fitxaAnterior);
 		posicionadorL.posiciona (fitxa,fitxaAnterior,valor);
 		setFitxaL(fitxa);
 		setlValue(nouValor);
 	}
 	else {
+		Gdx.app.error("litus", "Posicionador dret");
+		posicionadorR.lliga(fitxa, fitxaAnterior);
 		posicionadorR.posiciona(fitxa, fitxaAnterior, valor);
 		setFitxaR(fitxa);
 		setrValue(nouValor);
@@ -177,7 +195,7 @@ void posa(Fitxa fitxa, Fitxa fitxaAnterior, int valor){
 	}
 		tornJugador = jugadors.get(0);
 		reparteix(tornJugador);
-		Timer.schedule(new Task() {
+	/*	Timer.schedule(new Task() {
 			@Override
 			public void run(){
 				if (totesQuietes){
@@ -185,7 +203,7 @@ void posa(Fitxa fitxa, Fitxa fitxaAnterior, int valor){
 				}
 			}
 		},1, 1);
-		
+	*/	
 		//if (totesQuietes) // comença el joc
 		
 	}
