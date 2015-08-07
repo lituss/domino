@@ -3,5 +3,15 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="con" path="org.springsource.ide.eclipse.gradle.classpathcontainer"/>
+	<classpathentry kind="lib" path="D:/oldc/carles/java/lib/gdx.jar"/>
+	<classpathentry kind="lib" path="D:/oldc/carles/java/lib/gdx-backend-android.jar"/>
+	<classpathentry kind="lib" path="D:/oldc/carles/java/lib/gdx-backend-gwt.jar"/>
+	<classpathentry kind="lib" path="D:/oldc/carles/java/lib/gdx-backend-headless.jar"/>
+	<classpathentry kind="lib" path="D:/oldc/carles/java/lib/gdx-backend-jglfw.jar"/>
+	<classpathentry kind="lib" path="D:/oldc/carles/java/lib/gdx-backend-jglfw-natives.jar"/>
+	<classpathentry kind="lib" path="D:/oldc/carles/java/lib/gdx-backend-lwjgl.jar"/>
+	<classpathentry kind="lib" path="D:/oldc/carles/java/lib/gdx-backend-lwjgl-natives.jar"/>
+	<classpathentry kind="lib" path="D:/oldc/carles/java/lib/gdx-backend-robovm.jar"/>
+	<classpathentry kind="lib" path="D:/oldc/carles/java/lib/gdx-natives.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
